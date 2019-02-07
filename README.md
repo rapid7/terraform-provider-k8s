@@ -1,4 +1,6 @@
-This project has been archived and is unmaintained.
+NOTE: This repository was forked from https://github.com/ericchiang/terraform-provider-k8s.  
+
+The original project has been archived and is unmaintained.
 
 # Kubernetes Terraform Provider
 
@@ -6,11 +8,34 @@ The k8s Terraform provider enables Terraform to deploy Kubernetes resources. Unl
 
 ## Usage
 
+### Installation
+
 Use `go get` to install the provider:
 
 ```
-go get -u github.com/ericchiang/terraform-provider-k8s
+go get -u github.com/rapid7/terraform-provider-k8s
 ```
+
+#### Option 1
+
+The use `go install` to build the provider executable:
+```
+go install github.com/rapid7/terraform-provider-k8s
+```
+
+Copy the executable into your local Terraform plugins folder for use with any terraform:
+```
+cp $GOBIN/terraform-provider-k8s ~/.terraform.d/plugins/$ARCH
+```
+
+With the value for `$KUBECONFIG` set, `terraform plan` will display diffs in manifest files:
+```
+export KUBECONFIG=~/.kube/<kube_environment>.config
+
+terraform plan -var-file $(cat .terraform/environment).tfvars
+```
+
+#### Option 2
 
 Register the plugin in `~/.terraformrc`:
 
@@ -41,6 +66,8 @@ provider "k8s" {
 **WARNING:** Configuration from the variable will be recorded into a temporary file and the file will be removed as
 soon as call is completed. This may impact performance if the code runs on a shared system because
 and the global tempdir is used.
+
+### Creating Terraform
 
 The k8s Terraform provider introduces a single Terraform resource, a `k8s_manifest`. The resource contains a `content` field, which contains a raw manifest.
 
