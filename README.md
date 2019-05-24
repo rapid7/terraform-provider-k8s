@@ -9,11 +9,13 @@ The k8s Terraform provider enables Terraform to deploy Kubernetes resources. Unl
 ## Usage
 
 ### Installation
-
-Use `go get` to install the provider:
-
+#### Install
+Use `make install` to install the provider
+#### Build
+* Use `make build` to create the binary for each arch under `build/`
+* Copy the executable into your local Terraform plugins folder for use with any terraform:
 ```
-go get -u github.com/rapid7/terraform-provider-k8s
+cp build/$ARCH/terraform-provider-k8s ~/.terraform.d/plugins/$ARCH
 ```
 
 #### Option 1

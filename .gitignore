@@ -1,0 +1,6 @@
+# Build directory
+build/**
+
+# Vendor
+# Uncomment this to remove vendor folder...
+# vendor/**
