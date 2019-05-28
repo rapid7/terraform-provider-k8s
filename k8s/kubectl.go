@@ -41,7 +41,7 @@ func kubeconfigPath(m interface{}) (string, func(), error) {
 		cleanupFunc = func() {
 			var err = os.Remove(tmpfile.Name())
 			if err != nil {
-				fmt.Println(err.Error())
+				fmt.Errorf("removing temp kubeconfig file: %v", err)
 			}
 		}
 
