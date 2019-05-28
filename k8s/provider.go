@@ -5,12 +5,6 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-type config struct {
-	kubeconfig        string
-	kubeconfigContent string
-	kubeconfigContext string
-}
-
 func Provider() terraform.ResourceProvider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
