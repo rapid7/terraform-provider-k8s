@@ -1,6 +1,39 @@
-TEST?="./k8s"
+TEST?="./gotemplate"
 GOFMT_FILES?=$$(find . -name '*.go' |grep -v vendor)
 PKG_NAME=k8s
+PROVIDER_NAME=terraform-provider-k8s
+VERSION=1.0.0
+
+# Detect OS
+GOOS :=
+GOARCH :=
+ifeq ($(OS),Windows_NT)
+	GOOS = windows
+	ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
+		GOARCH = amd64
+	endif
+	ifeq ($(PROCESSOR_ARCHITECTURE),x86)
+		GOARCH = 386
+	endif
+else
+	UNAME_S := $(shell uname -s)
+	ifeq ($(UNAME_S),Linux)
+		GOOS = linux
+	endif
+	ifeq ($(UNAME_S),Darwin)
+		GOOS = darwin
+	endif
+		UNAME_M := $(shell uname -m)
+	ifeq ($(UNAME_M),x86_64)
+		GOARCH = amd64
+	endif
+		ifneq ($(filter %86,$(UNAME_M)),)
+			GOARCH = 386
+		endif
+	ifneq ($(filter arm%,$(UNAME_M)),)
+		GOOS = arm
+	endif
+endif
 
 default: install
 
@@ -8,7 +41,13 @@ install: errcheck fmtcheck
 	go install
 
 build: errcheck fmtcheck
-	@sh -c "'$(CURDIR)/scripts/build.sh'"
+	@sh -c "'$(CURDIR)/scripts/build.sh' -n $(PROVIDER_NAME) -o $(GOOS) -a $(GOARCH) -v $(VERSION)"
+
+build_all:
+	$(foreach GOOS, darwin linux windows, $(foreach GOARCH, 386 amd64, $(shell '$(CURDIR)/scripts/build.sh' -n $(PROVIDER_NAME) -o $(GOOS) -a $(GOARCH) -v $(VERSION))))
+
+install_plugin: build
+	@sh -c "'$(CURDIR)/scripts/install.sh' -n $(PROVIDER_NAME) -o $(GOOS) -a $(GOARCH) -v $(VERSION)"
 
 test: fmtcheck
 	go test $(TEST) || exit 1
@@ -52,4 +91,4 @@ test-compile:
 	fi
 	go test -c $(TEST) $(TESTARGS)
 
-.PHONY: build test testacc vet fmt fmtcheck errcheck lint tools test-compile
+.PHONY: build build_all test testacc vet fmt fmtcheck errcheck lint tools test-compile
