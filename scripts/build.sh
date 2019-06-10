@@ -2,7 +2,7 @@
 
 set -e
 
-name="terraform-provider-k8s"
+name=""
 os=""
 arch=""
 version=""
@@ -38,4 +38,10 @@ echo "==> Building the following binary for ${full_arch}: ${binary}"
 
 output="build/${full_arch}/${binary}"
 [[ -e "${output}" ]] && rm ${output}
-GOOS=${os} GOARCH=${arch} go build -v -ldflags "-X main.VERSION=${version}" -o ${output}
+
+commit_sha=$(git rev-parse HEAD)
+date=$(date +%Y-%m-%dT%T%z)
+
+GOOS=${os} GOARCH=${arch} go build -v \
+  -ldflags "-X main.version=${version} -X main.commit=${commit_sha} -X main.date=${date}" \
+  -o ${output}

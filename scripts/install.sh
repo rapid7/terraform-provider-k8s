@@ -2,7 +2,7 @@
 
 set -e
 
-name="terraform-provider-k8s"
+name=""
 os=""
 arch=""
 version=""

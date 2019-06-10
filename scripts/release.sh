@@ -3,14 +3,15 @@
 set -e
 
 SOURCE="${BASH_SOURCE[0]}"
-while [ -h "${SOURCE}" ]; do # resolve $SOURCE until the file is no longer a symlink
+while [ -h "${SOURCE}" ]; do
   DIR="$(cd -P "$( dirname "${SOURCE}" )" >/dev/null 2>&1 && pwd)"
   SOURCE="$(readlink "${SOURCE}")"
-  # if ${SOURCE} was a relative symlink, we need to resolve it relative
-  # to the path where the symlink file was located
   [[ ${SOURCE} != /* ]] && SOURCE="${DIR}/${SOURCE}"
 done
 DIR="$(cd -P "$(dirname "${SOURCE}")" >/dev/null 2>&1 && pwd)"
+
+name=""
+version=""
 
 while getopts "n:o:a:v:h" opt; do
   case ${opt} in
@@ -30,8 +31,16 @@ for required in "name" "version"; do
   fi
 done
 
-for os in "darwin" "linux" "windows"; do
-  for arch in "386" "amd64"; do
-    ${DIR}/build.sh -n ${name} -o ${os} -a ${arch} -v ${version}
-  done
+release_folder="dist"
+
+for file in $(find build/ -type f); do
+  IFS="/" read -ra path_parts <<< "${file}"
+  binary=$(basename ${file})
+  arch=${path_parts[2]}
+
+  echo "==> Releasing the following binary for ${arch}: ${binary}"
+  target_folder="${release_folder}/${arch}"
+  mkdir -p ${target_folder}
+
+  tar -C "build/${arch}" -czvf "${target_folder}/${binary}.tar.gz" ${binary}
 done

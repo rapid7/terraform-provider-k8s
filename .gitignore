@@ -38,6 +38,7 @@ node_modules
 
 # Build directory
 build/**
+dist/**
 
 # Vendor
 # Uncomment this to remove vendor folder...

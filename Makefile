@@ -49,6 +49,9 @@ build_all: errcheck fmtcheck
 install_plugin: build
 	@sh -c "'$(CURDIR)/scripts/install.sh' -n $(PROVIDER_NAME) -o $(GOOS) -a $(GOARCH) -v $(VERSION)"
 
+release: build_all
+	@sh -c "'$(CURDIR)/scripts/release.sh' -n $(PROVIDER_NAME) -o $(GOOS) -a $(GOARCH) -v $(VERSION)"
+
 test: fmtcheck
 	go test $(TEST) || exit 1
 	echo $(TEST) | \
