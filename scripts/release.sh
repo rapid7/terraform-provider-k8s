@@ -34,13 +34,13 @@ done
 release_folder="dist"
 
 for file in $(find build/ -type f); do
-  IFS="/" read -ra path_parts <<< "${file}"
+  IFS="/" read -ra PARTS <<< "${file}"
   binary=$(basename ${file})
-  arch=${path_parts[2]}
+  arch=${PARTS[2]}
 
   echo "==> Releasing the following binary for ${arch}: ${binary}"
   target_folder="${release_folder}/${arch}"
   mkdir -p ${target_folder}
 
-  tar -C "build/${arch}" -czvf "${target_folder}/${binary}.tar.gz" ${binary}
+  tar -C "build/${arch}" -czf "${target_folder}/${binary}.tar.gz" ${binary}
 done

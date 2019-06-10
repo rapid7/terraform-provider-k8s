@@ -40,4 +40,4 @@ echo "==> Installing the following binary for ${full_arch} @ ${output}: ${binary
 
 mkdir -p "${output}"
 cp "${source}" "${output}/${binary}"
-ls -lotr ${output}
+ls -lhotr ${output}

@@ -42,6 +42,6 @@ output="build/${full_arch}/${binary}"
 commit_sha=$(git rev-parse HEAD)
 date=$(date +%Y-%m-%dT%T%z)
 
-GOOS=${os} GOARCH=${arch} go build -v \
+GOOS=${os} GOARCH=${arch} go build -a \
   -ldflags "-X main.version=${version} -X main.commit=${commit_sha} -X main.date=${date}" \
   -o ${output}
