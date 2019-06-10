@@ -43,8 +43,8 @@ install: errcheck fmtcheck
 build: errcheck fmtcheck
 	@sh -c "'$(CURDIR)/scripts/build.sh' -n $(PROVIDER_NAME) -o $(GOOS) -a $(GOARCH) -v $(VERSION)"
 
-build_all:
-	$(foreach GOOS, darwin linux windows, $(foreach GOARCH, 386 amd64, $(shell '$(CURDIR)/scripts/build.sh' -n $(PROVIDER_NAME) -o $(GOOS) -a $(GOARCH) -v $(VERSION))))
+build_all: errcheck fmtcheck
+	@sh -c "'$(CURDIR)/scripts/build_all.sh' -n $(PROVIDER_NAME) -v $(VERSION)"
 
 install_plugin: build
 	@sh -c "'$(CURDIR)/scripts/install.sh' -n $(PROVIDER_NAME) -o $(GOOS) -a $(GOARCH) -v $(VERSION)"
