@@ -1,4 +1,4 @@
-TEST?="./gotemplate"
+TEST?="./k8s"
 GOFMT_FILES?=$$(find . -name '*.go' |grep -v vendor)
 PKG_NAME=k8s
 PROVIDER_NAME=terraform-provider-k8s
@@ -37,13 +37,13 @@ endif
 
 default: install
 
-install: errcheck fmtcheck
+install: errcheck fmtcheck test
 	go install
 
-build: errcheck fmtcheck
+build: errcheck fmtcheck test
 	@sh -c "'$(CURDIR)/scripts/build.sh' -n $(PROVIDER_NAME) -o $(GOOS) -a $(GOARCH) -v $(VERSION)"
 
-build_all: errcheck fmtcheck
+build_all: errcheck fmtcheck test
 	@sh -c "'$(CURDIR)/scripts/build_all.sh' -n $(PROVIDER_NAME) -v $(VERSION)"
 
 install_plugin: build
